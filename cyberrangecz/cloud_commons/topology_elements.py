@@ -1,7 +1,7 @@
 from typing import Union
 from enum import Enum
 
-from kypo.topology_definition.models import BaseBox, Network, Host, Router
+from cyberrangecz.topology_definition.models import BaseBox, Network, Host, Router
 
 Node = Union['MAN', Host, Router]
 

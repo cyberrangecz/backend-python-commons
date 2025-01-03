@@ -1,0 +1,53 @@
+name: Python commons CI
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ vars.VERSION }}
+      PYTHON_TAG: py3
+      ABI_TAG: none
+      PLATFORM_TAG: any
+      PACKAGE_EXTENSION: whl
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Python Version
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+
+      - name: Install Dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install setuptools wheel twine
+
+      - name: Set Package Version
+        run: python3 setup.py setopt --command=metadata --option=version --set-value=$VERSION
+
+      - name: Build Wheel Package
+        run: |
+          export WHEEL_NAME=$(python3 setup.py --name | tr '-' '_')
+          export PACKAGE=$WHEEL_NAME-$VERSION-${PYTHON_TAG}-${ABI_TAG}-${PLATFORM_TAG}.${PACKAGE_EXTENSION}
+          python3 setup.py bdist_wheel
+
+      - name: Publish to Pypi
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          python -m twine upload dist/*
+
+  create_tag:
+    uses: cyberrangecz/actions-templates/.github/workflows/tag_template.yml@master
+    with:
+      VERSION: ${{ vars.VERSION }}

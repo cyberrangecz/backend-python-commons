@@ -12,21 +12,15 @@
                 "name": "pypi",
                 "url": "https://pypi.org/simple",
                 "verify_ssl": true
-            },
-            {
-                "name": "kypo",
-                "url": "$KYPO_PYPI_DOWNLOAD_URL",
-                "verify_ssl": true
             }
         ]
     },
     "default": {
-        "kypo-topology-definition": {
+        "cyberrangecz-topology-definition": {
             "hashes": [
-                "sha256:cc9b88e0c192a077db2725e58a007dac351455238d8da2711bb27c573c04f6e3"
+                "sha256:6ab87d26aa778a9bc045c2eba9ce8e396b61a910acebdf71740633ca9b55b089"
             ],
-            "index": "kypo",
-            "version": "==0.5.8"
+            "version": "==0.5.10"
         },
         "netaddr": {
             "hashes": [

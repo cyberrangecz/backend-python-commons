@@ -2,14 +2,14 @@ from netaddr import IPSet, IPNetwork
 from typing import List, Iterable, Optional
 import yaml
 
-from kypo.topology_definition.models \
+from cyberrangecz.topology_definition.models \
     import TopologyDefinition, NetworkMappingList, RouterList, RouterMappingList, \
     Group, Network, Host, Router, DockerContainers, MonitoringTarget
 
-from kypo.cloud_commons.transformation_configuration \
+from cyberrangecz.cloud_commons.transformation_configuration \
     import TransformationConfiguration
-from kypo.cloud_commons.exceptions import KypoException
-from kypo.cloud_commons.topology_elements \
+from cyberrangecz.cloud_commons.exceptions import KypoException
+from cyberrangecz.cloud_commons.topology_elements \
     import MAN, Node, Link, NodeToNodeLinkPair, SecurityGroups
 
 MAN_NAME = 'man'  # Management Node

@@ -3,13 +3,8 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-[[source]]
-url = "$KYPO_PYPI_DOWNLOAD_URL"
-name = "kypo"
-verify_ssl = true
-
 [packages]
-kypo-topology-definition = { index = "kypo", version = "~=0.5.0" }
+cyberrangecz-topology-definition = "~=0.5.0"
 
 [dev-packages]
 
