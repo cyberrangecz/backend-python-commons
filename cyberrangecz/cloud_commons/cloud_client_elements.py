@@ -1,5 +1,5 @@
 from typing import Union, Dict, List
-from kypo.cloud_commons.exceptions import KypoException
+from cyberrangecz.cloud_commons.exceptions import KypoException
 
 
 class Image:
