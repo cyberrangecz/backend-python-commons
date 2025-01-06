@@ -17,7 +17,7 @@ setup(
     long_description=read('README.md'),
     packages=find_namespace_packages(include=['cyberrangecz.*'], exclude=['tests']),
     install_requires=[
-        'cyberrangecz-topology-definition~=0.5.0',
+        'cyberrangecz-topology-definition~=0.5.11',
     ],
     python_requires='>=3',
     zip_safe=False

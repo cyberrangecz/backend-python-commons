@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-cyberrangecz-topology-definition = "~=0.5.0"
+cyberrangecz-topology-definition = "~=0.5.11"
 
 [dev-packages]
 
 [requires]
-python_version = "3.8"
+python_version = "3.12"
