@@ -18,7 +18,7 @@ jobs:
   get_current_version:
     uses: cyberrangecz/actions-templates/.github/workflows/get_python_version.yml@master
     with:
-      file_path: "crczp/topology_definition/__init__.py"
+      file_path: "crczp/cloud_commons/__init__.py"
 
   build:
     if: github.event_name != 'pull_request'
