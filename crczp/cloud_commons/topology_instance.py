@@ -2,14 +2,14 @@ from netaddr import IPSet, IPNetwork
 from typing import List, Iterable, Optional
 import yaml
 
-from cyberrangecz.topology_definition.models \
+from crczp.topology_definition.models \
     import TopologyDefinition, NetworkMappingList, RouterList, RouterMappingList, \
     Group, Network, Host, Router, DockerContainers, MonitoringTarget
 
-from cyberrangecz.cloud_commons.transformation_configuration \
+from crczp.cloud_commons.transformation_configuration \
     import TransformationConfiguration
-from cyberrangecz.cloud_commons.exceptions import KypoException
-from cyberrangecz.cloud_commons.topology_elements \
+from crczp.cloud_commons.exceptions import KypoException
+from crczp.cloud_commons.topology_elements \
     import MAN, Node, Link, NodeToNodeLinkPair, SecurityGroups
 
 MAN_NAME = 'man'  # Management Node

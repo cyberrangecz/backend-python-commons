@@ -1,3 +1,5 @@
+__version__ = "v0.1.1"
+
 from .cloud_client_base import KypoCloudClientBase
 from .cloud_client_elements import Image, Limits, QuotaSet, Quota, HardwareUsage, NodeDetails
 from .exceptions import KypoException, StackException, StackCreationFailed, \

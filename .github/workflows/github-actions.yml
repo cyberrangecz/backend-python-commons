@@ -2,20 +2,29 @@ name: Python commons CI
 
 on:
   push:
-    branches:
+    branches-ignore:
       - master
-      - develop
   pull_request:
     branches:
       - master
   workflow_dispatch:
+    inputs:
+      confirm_action:
+        description: "Type 'yes' if you want to create a new tag"
+        required: true
+        default: "no"
 
 jobs:
+  get_current_version:
+    uses: cyberrangecz/actions-templates/.github/workflows/get_python_version.yml@master
+    with:
+      file_path: "crczp/topology_definition/__init__.py"
+
   build:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     env:
-      VERSION: ${{ vars.VERSION }}
+      VERSION: ${{ needs.get_current_version.outputs.version }}
       PYTHON_TAG: py3
       ABI_TAG: none
       PLATFORM_TAG: any
@@ -44,13 +53,25 @@ jobs:
           python3 setup.py bdist_wheel
 
       - name: Publish to Pypi
+        if: github.ref == 'refs/heads/master' && github.event.inputs.confirm_action == 'yes' && needs.control_tag.result == 'success'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
           python -m twine upload dist/*
 
-  create_tag:
-    uses: cyberrangecz/actions-templates/.github/workflows/tag_template.yml@master
+  # Controls if version consistent with semver and higner than last git tag.
+  control_tag:
+    if: github.event.pull_request.base.ref == 'master' || github.ref == 'refs/heads/master'
+    needs: get_current_version
+    uses: cyberrangecz/actions-templates/.github/workflows/tag_control_template.yml@master
     with:
-      VERSION: ${{ vars.VERSION }}
+      VERSION: ${{ needs.get_current_version.outputs.version }}
+
+  # Push tag only from manual workflow_dispatch with confirmed tag creation
+  push_tag:
+    if: github.ref == 'refs/heads/master' && github.event.inputs.confirm_action == 'yes'
+    needs: [ get_current_version, control_tag ]
+    uses: cyberrangecz/actions-templates/.github/workflows/tag_push_template.yml@master
+    with:
+      VERSION: ${{ needs.get_current_version.outputs.version }}

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "23ca55c40bbe1132570505d3f240c43bb2e95c7d5ba0d32e6d87f579749d6afc"
+            "sha256": "58fe310071e4c784cb55dc57d77984c3730ac9f93da430647f82ebd4bcd7645f"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,13 +16,13 @@
         ]
     },
     "default": {
-        "cyberrangecz-topology-definition": {
+        "crczp-topology-definition": {
             "hashes": [
-                "sha256:412425475b8ef50bd9c3c264c6c8efcc25ffc1e8af61a7a3333ffd4a8db6bcf1"
+                "sha256:472376213ed4b5374b5a3a29019eefc8e2547d1440512ec90d469d04094ed494"
             ],
             "index": "pypi",
             "markers": "python_version >= '3'",
-            "version": "==0.5.11"
+            "version": "==0.1.1"
         },
         "netaddr": {
             "hashes": [
@@ -94,11 +94,11 @@
         },
         "structlog": {
             "hashes": [
-                "sha256:597f61e80a91cc0749a9fd2a098ed76715a1c8a01f73e336b746504d1aad7610",
-                "sha256:b27bfecede327a6d2da5fbc96bd859f114ecc398a6389d664f62085ee7ae6fc4"
+                "sha256:2ef2a572e0e27f09664965d31a576afe64e46ac6084ef5cec3c2b8cd6e4e3ad3",
+                "sha256:843fe4f254540329f380812cbe612e1af5ec5b8172205ae634679cd35a6d6321"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==24.4.0"
+            "version": "==25.1.0"
         },
         "yamlize": {
             "hashes": [

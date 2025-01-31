@@ -1,7 +1,7 @@
 from typing import Union
 from enum import Enum
 
-from cyberrangecz.topology_definition.models import BaseBox, Network, Host, Router
+from crczp.topology_definition.models import BaseBox, Network, Host, Router
 
 Node = Union['MAN', Host, Router]
 

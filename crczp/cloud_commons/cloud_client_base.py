@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from cyberrangecz.cloud_commons.cloud_client_elements import Image, NodeDetails, QuotaSet, HardwareUsage, Limits
-from cyberrangecz.cloud_commons.topology_instance import TopologyInstance
+from crczp.cloud_commons.cloud_client_elements import Image, NodeDetails, QuotaSet, HardwareUsage, Limits
+from crczp.cloud_commons.topology_instance import TopologyInstance
 
 
 class KypoCloudClientBase(ABC):

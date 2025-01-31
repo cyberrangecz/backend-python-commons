@@ -11,13 +11,13 @@ def read(filename):
 
 
 setup(
-    name='cyberrangecz-python-commons',
+    name='crczp-python-commons',
     author='cybersecurityhub.cz',
     description='Python Commons',
     long_description=read('README.md'),
-    packages=find_namespace_packages(include=['cyberrangecz.*'], exclude=['tests']),
+    packages=find_namespace_packages(include=['crczp.*'], exclude=['tests']),
     install_requires=[
-        'cyberrangecz-topology-definition~=0.5.11',
+        'crczp-topology-definition~=0.1.1',
     ],
     python_requires='>=3',
     zip_safe=False
