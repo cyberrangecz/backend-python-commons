@@ -18,11 +18,11 @@
     "default": {
         "crczp-topology-definition": {
             "hashes": [
-                "sha256:472376213ed4b5374b5a3a29019eefc8e2547d1440512ec90d469d04094ed494"
+                "sha256:1e14b409374488423a0cc7f64ec776ba7f354e50d2ed80ce46b71ce5b88bf7ac"
             ],
             "index": "pypi",
             "markers": "python_version >= '3'",
-            "version": "==0.1.1"
+            "version": "==0.1.2"
         },
         "netaddr": {
             "hashes": [
