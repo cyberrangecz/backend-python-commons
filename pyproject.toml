@@ -1,17 +1,36 @@
 [project]
 name = "crczp-python-commons"
-version = "2.0.1"
+version = "2.1.0"
 description = "crczp python commons"
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 authors = [{ name = "cybersecurityhub.cz" }]
 dependencies = [
-    "crczp-topology-definition>=1.0.0"
+    "crczp-topology-definition>=1.0.0",
+    "netaddr>=1.3.0",
+    "PyYAML>=6.0.2",
+    "typing-extensions>=4.0.0",
 ]
+
+# DEV ONLY — consume the in-development topology-definition from its feature branch.
+# Remove before the master release (see the release runbook). uv strips this from built wheels.
+[tool.uv.sources]
+crczp-topology-definition = { git = "https://github.com/cyberrangecz/backend-topology-definition", branch = "feature/network-forwarding" }
+
 [project.optional-dependencies]
 dev = [
     "types-PyYAML",
+]
+
+[dependency-groups]
+test = [
+    "pytest",
+    "pytest-mock",
+    "pytest-structlog",
+]
+lint = [
+    "pylint",
 ]
 
 [build-system]
