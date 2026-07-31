@@ -1,11 +1,12 @@
 """Topology instance module for managing topology instances."""
 
 from collections.abc import Iterable
-from typing import Optional, cast
+from typing import cast, override
 
 import yaml
 from crczp.topology_definition.models import (
     DockerContainers,
+    ForwardingInterface,
     Group,
     Host,
     MonitoringTargetHTTP,
@@ -19,12 +20,12 @@ from crczp.topology_definition.models import (
     TopologyDefinition,
 )
 from netaddr import IPNetwork, IPSet
-from typing_extensions import override
 
 from crczp.cloud_commons.exceptions import CrczpException
 from crczp.cloud_commons.topology_elements import (
     MAN,
     Link,
+    NetworkForwarding,
     Node,
     NodeToNodeLinkPair,
     SecurityGroups,
@@ -174,7 +175,7 @@ class TopologyInstance:
         mt = self.topology_definition.monitoring_targets
         return mt.icmp or [] if mt else []
 
-    def get_monitored_hosts_http(self) -> Optional[MonitoringTargetHTTP]:
+    def get_monitored_hosts_http(self) -> MonitoringTargetHTTP | None:
         """
         Return the HTTP monitoring target configuration (URL list).
         """
@@ -219,9 +220,7 @@ class TopologyInstance:
 
     # get links
 
-    def get_node_links(
-        self, node: Node, networks: Optional[Iterable[Network]] = None
-    ) -> list[Link]:
+    def get_node_links(self, node: Node, networks: Iterable[Network] | None = None) -> list[Link]:
         """
         Return a list of Links associated with a given node.
 
@@ -235,7 +234,7 @@ class TopologyInstance:
         ]
 
     def get_network_links(
-        self, network: Network, nodes: Optional[Iterable[Node]] = None
+        self, network: Network, nodes: Iterable[Node] | None = None
     ) -> list[Link]:
         """
         Return a list of Links associated with a given network.
@@ -249,7 +248,7 @@ class TopologyInstance:
             if nodes is None or link.node in nodes
         ]
 
-    def get_link_between_node_and_network(self, node: Node, network: Network) -> Optional[Link]:
+    def get_link_between_node_and_network(self, node: Node, network: Network) -> Link | None:
         """
         Return a Link associated with given server and network.
         """
@@ -264,7 +263,7 @@ class TopologyInstance:
             raise CrczpException(msg)
         return links[0]
 
-    def get_network_default_gateway_link(self, network: Network) -> Optional[Link]:
+    def get_network_default_gateway_link(self, network: Network) -> Link | None:
         """
         Return a default gateway Link of the given network.
         """
@@ -311,13 +310,53 @@ class TopologyInstance:
 
         return accessible_links
 
+    # network forwarding (port mirroring)
+
+    def get_network_forwarding(self) -> NetworkForwarding | None:
+        """
+        Return the resolved network-forwarding (port mirroring) rule.
+
+        The rule from the topology definition is resolved to concrete Links: the
+        ``(host, network)`` source/destination interfaces become their Links.
+        Returns None when no forwarding is defined.
+        """
+        rule = getattr(self.topology_definition, 'network_forwarding', None)
+        if not rule:
+            return None
+        return NetworkForwarding(
+            sources=[self._resolve_forwarding_link(iface) for iface in rule.sources],
+            destination=self._resolve_forwarding_link(rule.destination),
+            direction=rule.direction,
+        )
+
+    def _resolve_forwarding_link(self, iface: ForwardingInterface) -> Link:
+        """
+        Resolve a forwarding ``(host, network)`` interface to its Link.
+        """
+        node = self.get_node(iface.host)
+        network = self.get_network(iface.network)
+        if node is None or network is None:
+            msg = (
+                f'network_forwarding references interface "{iface.host}:{iface.network}" '
+                'which does not exist in the topology instance.'
+            )
+            raise CrczpException(msg)
+        link = self.get_link_between_node_and_network(node, network)
+        if link is None:
+            msg = (
+                f'network_forwarding interface "{iface.host}:{iface.network}" has no link '
+                'in the topology instance.'
+            )
+            raise CrczpException(msg)
+        return link
+
     # get link pairs
 
     def get_node_to_nodes_link_pairs(
         self,
         node: Node,
-        networks: Optional[Iterable[Network]] = None,
-        nodes: Optional[list[Node]] = None,
+        networks: Iterable[Network] | None = None,
+        nodes: list[Node] | None = None,
     ) -> list[NodeToNodeLinkPair]:
         """
         Return a list of NodeToNodeLinkPairs starting from a node to all other nodes
@@ -448,7 +487,7 @@ class TopologyInstance:
         # one of first IP addresses in range of straight sequence of IP addresses is taken by DHCP
         # backward iteration so that picking free IP address will not
         #   unnecessarily divide range of straight sequence of IP addresses
-        for lower, upper in zip(reversed(ip_list[:-1]), reversed(ip_list)):
+        for lower, upper in zip(reversed(ip_list[:-1]), reversed(ip_list), strict=False):
             if lower + 1 == upper:
                 return str(upper)
 
@@ -459,8 +498,8 @@ class TopologyInstance:
         node: Node,
         network: Network,
         security_group: SecurityGroups,
-        ip: Optional[str] = None,
-        mac: Optional[str] = None,
+        ip: str | None = None,
+        mac: str | None = None,
     ) -> None:
         """
         Create and add Link amongst TI links.

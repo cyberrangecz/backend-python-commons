@@ -10,7 +10,6 @@ dependencies = [
     "crczp-topology-definition>=1.0.0",
     "netaddr>=1.3.0",
     "PyYAML>=6.0.2",
-    "typing-extensions>=4.0.0",
 ]
 
 # DEV ONLY — consume the in-development topology-definition from its feature branch.
@@ -69,6 +68,9 @@ indent-style = "space"
 docstring-code-format = true
 
 [tool.mypy]
+# Pin the analysis target to requires-python; otherwise mypy follows the interpreter
+# pre-commit happens to build its hook env with (3.11), which lacks typing.override.
+python_version = "3.12"
 check_untyped_defs = true
 ignore_missing_imports = true
 strict = true
